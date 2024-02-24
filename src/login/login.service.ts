@@ -15,6 +15,8 @@ export class LoginService {
 
 	async authUser(dto: LoginDto) {
 		try {
+			console.log("login service log dtos: ",dto)
+
 			const user = await prisma.user.findFirst({
 				where: {
 					email: dto.email
@@ -43,7 +45,7 @@ export class LoginService {
 				}
 			})
 
-			const followers = await prisma.followers.findMany({
+			const friends = await prisma.friends.findMany({
 				where: {
 					authorId: user.id
 				}
@@ -56,7 +58,7 @@ export class LoginService {
 				userData: userData,
 				userPosts: posts,
 				following,
-				followers
+				friends
 			}
 
 			return Data;

@@ -14,7 +14,7 @@ model User {
   email        String      @unique
   passwordHash String
   avatarURL    String?     @default("defaultUser.png")
-  followers    followers[]
+  friends    friends[]
   following    following[]
   posts        Post[]
 }
@@ -30,7 +30,7 @@ model Post {
   tags       String[]
 }
 
-model followers {
+model friends {
   id        Int    @id @default(autoincrement())
   userId    Int
   firstName String
@@ -48,11 +48,4 @@ model following {
   avatarURL String @default("defaultAvatar.png")
   authorId  Int
   user      User   @relation(fields: [authorId], references: [id])
-}
-
-model requests {
-  id       Int @id @default(autoincrement())
-  followersUserId Int
-  followingUserId Int
-  confirm  Boolean
 }

@@ -18,30 +18,30 @@ export class FollowService {
 			}
 
 			// Me
-			const followersUser = await prisma.user.findFirst({
+			const friendsUser = await prisma.user.findFirst({
 				where: { id: dto.MyId }
 			})
 			
-			if (!followersUser) {
+			if (!friendsUser) {
 				throw new BadRequestException("Not found user !");
 			}
 
 			await prisma.user.update({
 				where: { id: followingUser.id },
 				data: {
-					followers: {
+					friends: {
 						create: {
-							userId: followersUser.id,
-							firstName: followersUser.firstName,
-							lastName: followersUser.lastName,
-							avatarURL: followersUser.avatarURL,
+							userId: friendsUser.id,
+							firstName: friendsUser.firstName,
+							lastName: friendsUser.lastName,
+							avatarURL: friendsUser.avatarURL,
 						}
 					}
 				}
 			})
 
 			await prisma.user.update({
-				where: { id: followersUser.id },
+				where: { id: friendsUser.id },
 				data: {
 					following: {
 						create: {
@@ -69,11 +69,11 @@ export class FollowService {
 				where: { id: dto.followingId }
 			});
 
-			const findFollowersUser = await prisma.followers.findFirst({
-				where: { id: dto.followersId }
+			const findFriendsUser = await prisma.friends.findFirst({
+				where: { id: dto.friendsId }
 			});
 
-			if (!findFollowingUser && !findFollowersUser) {
+			if (!findFollowingUser && !findFriendsUser) {
 				throw new BadRequestException("Not found user")
 			}
 
@@ -81,11 +81,11 @@ export class FollowService {
 				where: { id: dto.followingId }
 			});
 
-			const followersDeleteUser = await prisma.followers.delete({
-				where: { id: dto.followersId }
+			const friendsDeleteUser = await prisma.friends.delete({
+				where: { id: dto.friendsId }
 			});
 
-			return [followingDeleteUser, followersDeleteUser]
+			return [followingDeleteUser, friendsDeleteUser]
 		} catch (err) {
 			console.error(err)
 			throw new BadRequestException("Error");

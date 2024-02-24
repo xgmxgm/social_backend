@@ -13,5 +13,5 @@ export class followDelete {
 	followingId: number;
 
 	@IsNumber()
-	followersId: number;
+	friendsId: number;
 }

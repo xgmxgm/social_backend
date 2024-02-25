@@ -15,22 +15,28 @@ export class LoginService {
 
 	async authUser(dto: LoginDto) {
 		try {
-			console.log("login service log dtos: ",dto)
-
 			const user = await prisma.user.findFirst({
 				where: {
 					email: dto.email
 				}
 			})
 	
-			if (!user) {
-				throw new BadRequestException();
+			if (!user) {				
+				const Data = {
+					message: "Wrong login or password",
+				};
+
+				return Data
 			}
 	
 			const isValidPass = await bcrypt.compare(dto.password, user.passwordHash);
 	
 			if (!isValidPass) {
-				throw new BadRequestException();
+				const Data = {
+					message: "Wrong login or password",
+				};
+
+				return Data
 			}
 
 			const posts = await prisma.post.findMany({
@@ -64,7 +70,12 @@ export class LoginService {
 			return Data;
 		} catch (err) {
 			console.error(err)
-			throw new BadRequestException("Wrong login or password !")
+
+			const Data = {
+				message: "Failed to log in",
+			};
+
+			return Data;
 		}
 	}
 }
